@@ -1,0 +1,28 @@
+<div class="single-item-container">
+    <h1 align="center" color="black"> Do you want to delete this item? </h1>
+      <div class="single-item-card">
+          <div class="single-item-navigation">
+              <form id="delete-{{item._id}}" action="/items/{{item._id}}/delete" method="post">
+              <button class="button update-button" id="yes-button" type="submit">
+              <p>Yes</p>
+              </button>
+            </form>
+            <a href="/">
+              <div id="no-button" class="button update-button">
+                No
+              </div>
+            </a>
+          </div>
+        <div class="single-item-contents">
+          <div id="item-title" class="single-item-title">
+            {{item.title}}
+          </div>
+          <div class="single-item-img">
+            <img src="{{item.imageUrl}}" alt="">
+          </div>
+          <div id="item-description" class="single-item-description">
+            {{item.description}}
+          </div>
+        </div>
+      </div>
+    </div>
