@@ -1,5 +1,5 @@
 const {assert} = require('chai');
-const {buildItemObject} = require('../test-utils');
+const {buildVideoObject} = require('../test-utils');
 const Video = require('../../models/video');
 const {connectDatabaseAndDropData, diconnectDatabase} = require('../setup-teardown-utils');
 
@@ -14,14 +14,16 @@ describe('User visits landing page', () => {
         it('gets redirected to video single view page', async () => {
 
             // SETUP
-            const itemToCreate = await buildItemObject();
-            const item = await Video.create(itemToCreate)
-            return item
+            const videoToCreate = await buildVideoObject();
+            const video = await Video.create(videoToCreate)
+            return video
             browser.url('/')
+
             // EXCERCISE
-            browser.click(`#video-${item._id} a[href="/videos/${item._id}"]`)
+            browser.click(`#video-${video._id} a[href="/videos/${video._id}"]`)
+
             // VERIFY
-            assert.include(browser.getText('body'), itemToCreate.description);
+            assert.include(browser.getText('body'), videoToCreate.description);
         })
     })
 
@@ -29,15 +31,17 @@ describe('User visits landing page', () => {
         it('gets redirected to edit video page', async () => {
 
             // SETUP
-            const itemToCreate = buildItemObject();
-            const item = await Video.create(itemToCreate);
-            return item
+            const videoToCreate = buildVideoObject();
+            const video = await Video.create(videoToCreate);
+            return video
             browser.url('/')
-            browser.click(`#video-${item._id} a[href="/videos/${item._id}"]`)
+            browser.click(`#video-${video._id} a[href="/videos/${video._id}"]`)
+
             // EXCERCISE
-            browser.click(`#edit-${item.id}`)
+            browser.click(`#edit-${video.id}`)
+
             // VERIFY
-            assert.include(browser.getText('#title-input'), itemToCreate.title);
+            assert.include(browser.getText('#title-input'), videoToCreate.title);
         })
     })
 
@@ -46,15 +50,17 @@ describe('User visits landing page', () => {
 
             // SETUP
             const newTitle = "A new Title"
-            const itemToCreate = buildItemObject();
-            const item = await Video.create(itemToCreate);
-            return item
+            const videoToCreate = buildVideoObject();
+            const video = await Video.create(videoToCreate);
+            return video
             browser.url('/')
-            browser.click(`#video-${item._id} a[href="/videos/${item._id}"]`)
+            browser.click(`#video-${video._id} a[href="/videos/${video._id}"]`)
             browser.click(`#edit-${item.id}`)
+
             // EXCERCISE
             browser.setValue('#title-input', newTitle);
             browser.click("#submit-button")
+
             // VERIFY
             assert.include(browser.getText('body'), newTitle);
         })
