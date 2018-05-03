@@ -5,11 +5,10 @@ const {jsdom} = require('jsdom');
 const app = require('../../app');
 const Video = require('../../models/video');
 
-const {buildItemObject, seedItemToDatabase} = require('../test-utils');
+const {buildVideoObject, seedItemToDatabase} = require('../test-utils');
 const {connectDatabaseAndDropData, diconnectDatabase} = require('../setup-teardown-utils');
 
 describe('Server path: /videos/:id/delete', () => {
-  const itemToCreate = buildItemObject();
 
   beforeEach(connectDatabaseAndDropData);
 
@@ -20,28 +19,33 @@ describe('Server path: /videos/:id/delete', () => {
     it('DELETE button to delete', async () => {
 
       //SETUP 
-      const itemToDelete = buildItemObject();
-      const item = await Video.create(itemToDelete)
+
+      const videoToDelete = buildVideoObject();
+      const item = await Video.create(videoToDelete)
       return item
       console.log(item)
+
       // EXCERCISE 
       const response = await request(app)
         .post(`/videos/${item._id}/delete`)
         .type('form')
         .send();
-      const deletedItem = await Video.findOne(itemToDelete);
+      const deletedItem = await Video.findOne(videoToDelete);
+
       // VERIFY
       assert.equal(deletedItem, null);
     });
     it('redirects home', async () => {
 
       //SETUP 
-      const itemToDelete = await seedItemToDatabase();
+      const videoToDelete = await seedItemToDatabase();
+
       // EXCERCISE 
       const response = await request(app)
-        .post(`/videos/${itemToDelete._id}/delete`)
+        .post(`/videos/${videoToDelete._id}/delete`)
         .type('form')
         .send();
+
       // VERIFY
       assert.equal(response.status, 302);
       assert.equal(response.headers.location, '/');
