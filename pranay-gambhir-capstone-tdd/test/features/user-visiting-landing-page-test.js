@@ -11,8 +11,10 @@ describe('User visits landing page', () => {
     it('to the create page', () => {
       // Setup
       browser.url('/');
+
       // Exercise
       browser.click('a[href="/videos/create"]');
+      
       // Verification
       assert.include(browser.getText('body'), 'Save a video');
     });
