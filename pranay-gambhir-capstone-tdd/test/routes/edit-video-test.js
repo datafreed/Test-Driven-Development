@@ -5,7 +5,7 @@ const {jsdom} = require('jsdom');
 const app = require('../../app');
 const Video = require('../../models/video');
 
-const {parseTextFromHTML, buildItemObject} = require('../test-utils');
+const {parseTextFromHTML, buildVideoObject} = require('../test-utils');
 const {connectDatabaseAndDropData, diconnectDatabase} = require('../setup-teardown-utils');
 
 describe('Server path: /videos/:id/edit', () => {
@@ -18,12 +18,14 @@ describe('Server path: /videos/:id/edit', () => {
     it('renders filled input fields', async () => {
 
       //SETUP 
-      const itemToUpdate = buildItemObject();
-      const item = await Video.create(itemToUpdate)
-      return item
+      const videoToEdit = buildVideoObject();
+      const video = await Video.create(videoToEdit)
+      return video
+
       // EXCERCISE 
       const response = await request(app)
-      .get(`/videos/${item._id}/edit`)
+      .get(`/videos/${video._id}/edit`)
+
       // VERIFY
       assert.notEqual(parseTextFromHTML(response.text, 'input#title-input'), '');
       assert.notEqual(parseTextFromHTML(response.text, 'textarea#description-input'), '');
@@ -36,34 +38,38 @@ describe('Server path: /videos/:id/edit', () => {
     it('updates and saves the video', async () => {
 
       //SETUP 
-      const itemToUpdate = buildItemObject();
-      const item = await Video.create({ 
+      const videoToEdit = buildVideoObject();
+      const video = await Video.create({ 
         title: "title", 
         description: "description", 
         url: "https://www.youtube.com/embed/j_ki9tw9rUQ"
       });
+
       // EXCERCISE 
       const response = await request(app)
-        .post(`/videos/${item._id}/edit`)
+        .post(`/videos/${video._id}/edit`)
         .type('form')
-        .send(itemToUpdate);
-      const updatedItem = await Video.findById(item._id);
+        .send(videoToEdit);
+      const updatedItem = await Video.findById(video._id);
+
       // VERIFY
-      assert.equal(updatedItem.title, itemToUpdate.title);
-      assert.equal(updatedItem.description, itemToUpdate.description);
-      assert.equal(updatedItem.url, itemToUpdate.url);
+      assert.equal(updatedItem.title, videoToEdit.title);
+      assert.equal(updatedItem.description, videoToEdit.description);
+      assert.equal(updatedItem.url, videoToEdit.url);
     });
     it('redirects home', async () => {
 
       //SETUP 
-      const itemToUpdate = buildItemObject();
-      const item = await Video.create(itemToUpdate)
-      return item;
+      const videoToEdit = buildVideoObject();
+      const video = await Video.create(videoToEdit)
+      return video;
+
       // EXCERCISE 
       const response = await request(app)
-        .post(`/videos/${item._id}/edit`)
+        .post(`/videos/${video._id}/edit`)
         .type('form')
-        .send(itemToUpdate);
+        .send(videoToEdit);
+
       // VERIFY
       assert.equal(response.status, 302);
       assert.equal(response.headers.location, '/');
@@ -76,15 +82,17 @@ describe('Server path: /videos/:id/edit', () => {
         description: 'test',
         url: "https://www.youtube.com/embed/j_ki9tw9rUQ"
       };
-      const itemToUpdate = buildItemObject();
-      const item = await Video.create(itemToUpdate)
-      return item;
+      const videoToEdit = buildVideoObject();
+      const video = await Video.create(videoToEdit)
+      return video;
+
       // EXCERCISE 
       const response = await request(app)
-        .post(`/videos/${item._id}/edit`)
+        .post(`/videos/${video._id}/edit`)
         .type('form')
         .send(invalid);
       const allItems = await Video.find({});
+
       // VERIFY
       assert.equal(allItems.length, 0);
       assert.equal(response.status, 400);
@@ -98,15 +106,17 @@ describe('Server path: /videos/:id/edit', () => {
         description: null,
         url: "https://www.youtube.com/embed/j_ki9tw9rUQ"
       };
-      const itemToUpdate = buildItemObject();
-      const item = await Video.create(itemToUpdate)
-      return item;
+      const videoToEdit = buildVideoObject();
+      const video = await Video.create(videoToEdit)
+      return video;
+
       // EXCERCISE
       const response = await request(app)
-        .post(`/videos/${item._id}/edit`)
+        .post(`/videos/${video._id}/edit`)
         .type('form')
         .send(invalid);
       const allItems = await Video.find({});
+
       // VERIFY
       assert.equal(allItems.length, 0);
       assert.equal(response.status, 400);
@@ -120,15 +130,17 @@ describe('Server path: /videos/:id/edit', () => {
         description: 'test',
         url: null
       };
-      const itemToUpdate = buildItemObject();
-      const item = await Video.create(itemToUpdate)
-      return item;
+      const videoToEdit = buildVideoObject();
+      const video = await Video.create(videoToEdit)
+      return video;
+
       // EXCERCISE 
       const response = await request(app)
-        .post(`/videos/${item._id}/edit`)
+        .post(`/videos/${video._id}/edit`)
         .type('form')
         .send(invalid);
       const allItems = await Video.find({});
+
       // VERIFY
       assert.equal(allItems.length, 0);
       assert.equal(response.status, 400);
