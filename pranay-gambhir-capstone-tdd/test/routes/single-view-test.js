@@ -16,13 +16,15 @@ describe('Server path: /videos/:id', () => {
   it('single page view url renders the data of the respective video', async () => {
 
     // SETUP 
-    const itemToCreate = await seedItemToDatabase();
+    const videoToCreate = await seedItemToDatabase();
+
     // EXCERCISE 
     const response = await request(app)
-    .get(`/videos/${itemToCreate._id}`)
+    .get(`/videos/${videoToCreate._id}`)
+
     // VERIFY
-    assert.include(parseTextFromHTML(response.text, '#video-title'), itemToCreate.title)
-    assert.include(parseTextFromHTML(response.text, '#video-description'), itemToCreate.description)
+    assert.include(parseTextFromHTML(response.text, '#video-title'), videoToCreate.title)
+    assert.include(parseTextFromHTML(response.text, '#video-description'), videoToCreate.description)
 })
   
 });
