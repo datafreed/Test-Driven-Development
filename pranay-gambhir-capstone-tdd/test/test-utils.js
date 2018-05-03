@@ -3,7 +3,7 @@ const {jsdom} = require('jsdom');
 const Video = require('../models/video');
 
 // Create and return a sample Video object
-const buildItemObject = (options = {}) => {
+const buildVideoObject = (options = {}) => {
   const title = options.title || 'Warriyo';
   const url = options.url || 'https://www.youtube.com/watch?v=yJg-Y5byMMw&list=RDyJg-Y5byMMw&start_radio=1';
   const description = options.description || 'NCS';
@@ -12,7 +12,7 @@ const buildItemObject = (options = {}) => {
 
 // Add a sample Video object to mongodb
 const seedItemToDatabase = async (options = {}) => {
-  const video = await Video.create(buildItemObject(options));
+  const video = await Video.create(buildVideoObject(options));
   return video;
 };
 
@@ -27,7 +27,7 @@ const parseTextFromHTML = (htmlAsString, selector) => {
 };
 
 module.exports = {
-  buildItemObject,
+  buildVideoObject,
   seedItemToDatabase,
   parseTextFromHTML,
 };
